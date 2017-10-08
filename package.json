@@ -1,6 +1,6 @@
 {
   "name": "latex-watcher",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": "Mohamed Eltuhamy <tuhamy@gmail.com>",
   "description": "a simple file watcher for latex auto-compiling",
   "contributors": [ 

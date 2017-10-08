@@ -31,20 +31,24 @@ var gaze = require('gaze'),
            .usage('Watch latex files and compile them.\nUsage: $0')
            .demand('c')
            .alias('c', 'command')
-           .describe('c', 'list of commands to run. e.g latex,bibtex,pdflatex,cleanup')
+           .describe('c', 'list of commands to run. e.g latex,bibtex,pdflatex,makeglossaries,cleanup')
            .demand('t')
            .alias('t', 'tex')
            .describe('t', 'tex file to compile on changes')
            .alias('b','bib')
            .describe('b', 'bib file used (required if bibtex is used)')
+           .alias('g','glossary')
+           .describe('g', 'gls file used (required if makeglossaries is used)')
            .describe('once', 'only run the commands once (no watching)')
            .default('c', 'pdflatex').argv,
     texName = argv.t,
     bibName = argv.bib,
     commands = argv.c,
+    glsName = argv.g,
 
     tempFiles = ['.blg','.bbl','.aux','.log','.brf','.nlo','.out','.dvi','.ps',
-      '.lof','.toc','.fls','.fdb_latexmk','.pdfsync','.synctex.gz','.ind','.ilg','.idx']
+      '.lof','.toc','.fls','.fdb_latexmk','.pdfsync','.synctex.gz','.ind','.ilg','.idx',
+      '.glo', '.glg', '.gls', '.xdy']
       .map(function(extension) {
         return texName + extension;
       }),
@@ -101,6 +105,15 @@ var gaze = require('gaze'),
       });
     },
 
+    compileGlossaries = function(cb){
+      process.stdout.write('  » makeglossaries');
+      var bibtex      = spawn('makeglossaries', [glsName]);
+      bibtex.on('exit', function (code) {
+        process.stdout.write((code==0 ? '\r  ✓ makeglossaries'.green : '\r  × makeglossaries'.red) + '\n');
+        if(cb != undefined) cb();
+      });
+    },
+
     cleanUp = function(cb){
       process.stdout.write('  » cleanup');
       tempFiles.forEach(function(file) {
@@ -124,6 +137,7 @@ var gaze = require('gaze'),
         latex: compileLatex,
         pdflatex: compilePDFLatex,
         bibtex: compileBibtex,
+        makeglossaries: compileGlossaries,
         cleanup: cleanUp,
         exit: exit
       };

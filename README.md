@@ -21,6 +21,7 @@ The currently allowed commands are:
 - latex
 - pdflatex
 - bibtex
+- makeglossaries
 - cleanup (removes temporary latex files after compilation)
 
 Example
