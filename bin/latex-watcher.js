@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 var gaze = require('gaze'),
-    sys   = require('sys'),
+    sys   = require('util'),
     spawn = require('child_process').spawn,
     colors = require('colors'),
     fs = require('fs'),
